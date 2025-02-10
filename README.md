@@ -86,6 +86,32 @@ Red LED GND           |  Digital 5
 Red LED Signal        |  5V
 
 
+# Project Setup
+
+## PHP Setup
+1. Ensure you have PHP installed on your system. You can download it from [php.net](https://www.php.net/downloads).
+2. Clone the repository to your local machine:
+   ```sh
+   git clone <repository-url>
+3. Navigate to the project directory
+  cd RFID-checkin-system-using-Arduino-and-nodered
+4. Start the PHP built-in server
+   php -S localhost:8000
+5. Open your browser and navigate to http://localhost:8000 to view the PHP application.
+
+## Node-RED Setup
+1. Install Node-RED globally using npm:
+  npm install -g node-red
+2. Start Node-RED
+  node-red
+3. Open your browser and navigate to http://localhost:1880 to access the Node-RED editor.
+4. Import the Node-RED flow for the RFID check-in system:
+    In the Node-RED editor, click on the menu button (three horizontal lines) in the top right corner.
+    Select "Import" and then "Clipboard".
+    Paste the flow JSON and click "Import".
+5. Deploy the flow by clicking the "Deploy" button in the top right corner of the Node-RED editor.
+
+
 <!-- ## check out our project at Arduino 
 [RFID Based Attendance System](https://create.arduino.cc/projecthub/team_chkr/rfid-based-smart-attendance-system-46b045?ref=user&ref_id=1435285&offset=0) -->
 
