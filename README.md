@@ -1,112 +1,167 @@
-RFID Based Check-In system
-===
-RFID Based Check-In System using Arduino, RFID MFRC522 Module and Node-Red.
+# RFID Based Check-In System
 
-# Why was it built?
-Traditional check-in systems often rely on manual processes that are prone to errors and time-consuming. To overcome these challenges, we developed an RFID Based Check-In System using Arduino, RFID MFRC522 Module, and Node-RED. This system automates the check-in process using RFID cards issued to users.
+An RFID-based check-in system built with Arduino, an MFRC522 RFID reader, Node-RED, PHP, and MySQL. The Arduino reads RFID cards, sends valid check-in data over serial, Node-RED stores the data in MySQL, and the PHP dashboard displays records and user management tools.
 
-# What is RFID?
-RFID (Radio Frequency Identification) is a technology where digital data stored in RFID tags is captured by a reader via radio waves, facilitating quick and contactless identification.
+## Overview
 
-# What is Node-red
-Node-RED is an open-source programming tool for wiring together hardware devices, APIs, and online services in new and interesting ways. It provides a browser-based editor that allows users to create flows by simply dragging and dropping nodes, which represent different functionalities, and connecting them together to define the flow of data.
+Traditional check-in systems often depend on manual entry, which can be slow and error-prone. This project automates check-ins by assigning RFID cards to users. When a registered card is scanned, the system grants access, logs the check-in, and makes the record available in the dashboard.
 
+## How It Works
 
-# Components we used in the project
-* Arduino Uno Board
+1. A user scans an RFID card on the MFRC522 reader.
+2. The Arduino checks the card ID against the registered cards in the sketch.
+3. If the card is valid, the Arduino displays access feedback, activates the servo, and sends JSON data over serial.
+4. Node-RED reads the serial data, parses the JSON payload, and inserts it into MySQL.
+5. The PHP dashboard displays check-in records, users, statistics, and recent activity.
 
-* RFID MRFC522 module
+## Tech Stack
 
+- Arduino Uno
+- MFRC522 RFID module
+- I2C LCD display
+- Servo motor
+- LEDs and buzzer
+- Node-RED
+- PHP
+- MySQL/MariaDB
+- AdminLTE dashboard UI
 
-* LCD display (20*4) with i2c lcd module
+## Hardware Components
 
+- Arduino Uno board
+- RFID MFRC522 module
+- I2C LCD display
+- Servo motor
+- Buzzer
+- Green and red LEDs
+- Jumper wires
+- Breadboard
 
-* LEDs and a Buzzer
+## Wiring Guide
 
+### RFID MFRC522
 
-* Node-RED (flow-based development tool)
+| MFRC522 Pin | Arduino Uno |
+|-------------|-------------|
+| SDA         | Digital 10  |
+| SCK         | Digital 13  |
+| MOSI        | Digital 11  |
+| MISO        | Digital 12  |
+| IRQ         | Unconnected |
+| GND         | GND         |
+| RST         | Digital 9   |
+| 3.3V        | 3.3V        |
 
+> Important: The MFRC522 must be powered with `3.3V`, not `5V`.
 
+### Servo Motor
 
-# Components Connection With Arduino UNO
+| Servo Pin | Common Wire Color      | Arduino Uno |
+|-----------|------------------------|-------------|
+| GND       | Brown/Black            | GND         |
+| VCC       | Red                    | 5V          |
+| Signal    | Orange/Yellow/White    | Digital 6   |
 
-## RFID MFRC522
----------------
+### I2C LCD Module
 
-|Pin   |    Wiring to Arduino Uno|
-|------|-------------------------|
-|SDA   |    Digital 10|
-|SCK   |    Digital 13|
-|MOSI  |    Digital 11|
-|MISO  |    Digital 12|
-|IRQ   |    unconnected
-|GND   |    GND
-|RST   |    Digital 9
-|3.3V  |    3.3V
+| LCD Pin | Arduino Uno |
+|---------|-------------|
+| GND     | GND         |
+| VCC     | 5V          |
+| SDA     | A4          |
+| SCL     | A5          |
 
-Caution: You must power this device to 3.3V!
+### Buzzer
 
-## Servo Motor
------------------
+| Buzzer Pin | Arduino Uno |
+|------------|-------------|
+| GND        | GND         |
+| VCC        | 5V          |
+| Signal     | Digital 5   |
 
-|Servo Motor  |   Wiring to Arduino Uno|
-|----------------|------------------------|
-GND              |   GND
-VCC              |   5v
-Signal           |   Digital 6
+### LEDs
 
-## I2C module
--------------
+| LED Pin          | Arduino Uno |
+|------------------|-------------|
+| Green LED GND    | GND         |
+| Green LED Signal | Digital 7   |
+| Red LED GND      | GND         |
+| Red LED Signal   | Digital 4   |
 
-|I2C Character LCD |  Arduino|
-|------------------|---------|
-GND         	  |  GND
-VCC        	  |  5 V
-SDA        	  |  A4
-SCL         	  |  A5
+## Arduino Setup
 
-## Buzzer
--------------
+1. Open `RFID_checkin_system.ino` in the Arduino IDE.
+2. Install the required Arduino libraries:
+   - `MFRC522`
+   - `LiquidCrystal_I2C`
+   - `Servo`
+3. Update the `users[]` array in the sketch with the card IDs, names, and matric numbers you want to register.
+4. Select the correct Arduino board and COM port.
+5. Upload the sketch to the Arduino Uno.
 
-|Buzzer     |  Arduino|
-|-----------|---------|
-GND         |  GND
-VCC        	|  5V
-Signal      |  Digital 5
+## Database Setup
 
+1. Create a MySQL/MariaDB database named `checkin_system`.
+2. Import the SQL file:
 
-## LEDs
--------------
+   ```sql
+   sql/checkin_system.sql
+   ```
 
-|LED                  |  Arduino  |
-|---------------------|-----------|
-Green LED GND         |  GND
-Green LED Signal      |  Digital 7
-Red LED GND           |  GND
-Red LED Signal        |  Digital 4
+3. Confirm the database credentials in `connection.php`:
 
+   ```php
+   $conn = new mysqli('localhost', 'root', '', 'checkin_system');
+   ```
 
-# Project Setup
+## PHP Dashboard Setup
 
-## PHP Setup
-1. Ensure you have PHP installed on your system. You can download it from [php.net](https://www.php.net/downloads).
-2. Clone the repository to your local machine:
-   ```sh
-   git clone <repository-url>
-3. Navigate to the project directory
-  cd RFID-checkin-system-using-Arduino-and-nodered
-4. Start the PHP built-in server
-   php -S localhost:8000
-5. Open your browser and navigate to http://localhost:8000 to view the PHP application.
+If you are using XAMPP, place the project folder inside `htdocs`, then visit the project from your browser.
+
+For PHP's built-in server:
+
+```sh
+php -S localhost:8000
+```
+
+Then open:
+
+```text
+http://localhost:8000
+```
 
 ## Node-RED Setup
-1. Install Node-RED globally using npm:
-  npm install -g node-red
-2. Start Node-RED
-  node-red
-3. Open your browser and navigate to http://localhost:1880 to access the Node-RED editor.
-4. Import the Node-RED flow for the RFID check-in system:
-    In the Node-RED editor, click on the menu button (three horizontal lines) in the top right corner.
-    Select "Import" and then "Clipboard".
-    Paste the flow JSON and click "Import".
-5. Deploy the flow by clicking the "Deploy" button in the top right corner of the Node-RED editor.
+
+1. Install Node-RED globally:
+
+   ```sh
+   npm install -g node-red
+   ```
+
+2. Start Node-RED:
+
+   ```sh
+   node-red
+   ```
+
+3. Open the Node-RED editor:
+
+   ```text
+   http://localhost:1880
+   ```
+
+4. Import `flows.json` into Node-RED.
+5. Confirm the serial port matches your Arduino port, for example `COM9`.
+6. Confirm the MySQL node points to the `checkin_system` database.
+7. Deploy the flow.
+
+## Default Login
+
+The sample SQL file includes demo users. Example login details may be found in `login_details.txt` if included in your local copy.
+
+## Notes
+
+- The Arduino sketch controls access using hardcoded card IDs.
+- Node-RED handles serial input and writes check-in records to MySQL.
+- The dashboard uses AJAX polling to refresh statistics and records without requiring a manual page reload.
+- If no data appears in the dashboard, check the Arduino serial port, Node-RED flow status, and database connection.
