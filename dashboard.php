@@ -1,31 +1,28 @@
+<?php
+$current_page = basename($_SERVER['PHP_SELF']);
+$records_open = $current_page === 'records.php';
+$users_open = in_array($current_page, ['users.php', 'adduser.php'], true);
+?>
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="index.php" class="brand-link">
-      <span class="brand-text font-weight-light">Check-In Dashboard</span>
+      <span class="brand-mark"><i class="fas fa-fingerprint"></i></span>
+      <span>
+        <span class="brand-title">RFID Check-In</span>
+        <span class="brand-subtitle">Access Platform</span>
+      </span>
     </a>
 
     <!-- Sidebar -->
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+      <div class="user-panel pb-3 mb-3 d-flex align-items-center">
         <div class="image">
-          <img src="images/beard.png"class="img-circle elevation-2" alt="User Image">
+          <img src="images/beard.png" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block"><?php echo $_SESSION['username'];  ?></a>
-        </div>
-      </div>
-
-      <!-- SidebarSearch Form -->
-      <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
+          <a href="#" class="d-block"><?php echo e($_SESSION['username'] ?? 'Admin'); ?></a>
         </div>
       </div>
 
@@ -33,63 +30,53 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
-            <a href="index.php" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>
-                Dashboard
-              </p>
+            <a href="index.php" class="nav-link <?php echo $current_page === 'index.php' ? 'active' : ''; ?>">
+              <i class="nav-icon fas fa-chart-pie"></i>
+              <p>Dashboard</p>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-copy"></i>
-              <p>
-                Records
-                <i class="right fas fa-angle-left "></i>
-              </p>
+          <li class="nav-item <?php echo $records_open ? 'menu-open' : ''; ?>">
+            <a href="#" class="nav-link <?php echo $records_open ? 'active' : ''; ?>">
+              <i class="nav-icon fas fa-clipboard-list"></i>
+              <p>Records</p>
+              <i class="right fas fa-angle-left"></i>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="records.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
+                <a href="records.php" class="nav-link <?php echo $current_page === 'records.php' ? 'active' : ''; ?>">
+                  <i class="fas fa-tasks nav-icon"></i>
                   <p>View Records</p>
                 </a>
               </li>
             </ul>
           </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-male"></i>
-              <p>
-                Users
-              </p>
-              <i class="right fas fa-angle-left "></i>
+          <li class="nav-item <?php echo $users_open ? 'menu-open' : ''; ?>">
+            <a href="#" class="nav-link <?php echo $users_open ? 'active' : ''; ?>">
+              <i class="nav-icon fas fa-user-shield"></i>
+              <p>Users</p>
+              <i class="right fas fa-angle-left"></i>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="users.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
+                <a href="users.php" class="nav-link <?php echo $current_page === 'users.php' ? 'active' : ''; ?>">
+                  <i class="fas fa-address-book nav-icon"></i>
                   <p>View All Users</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="adduser.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
+                <a href="adduser.php" class="nav-link <?php echo $current_page === 'adduser.php' ? 'active' : ''; ?>">
+                  <i class="fas fa-user-plus nav-icon"></i>
                   <p>Add New User</p>
                 </a>
               </li>
             </ul>
           </li>
-            <li class="nav-item">
-              <a href="profile.php" class="nav-link">
-                <i class="nav-icon fas fa-user"></i>
-                <p>
-                  Profile
-                </p>
-              </a>
-            </li>
+          <li class="nav-item">
+            <a href="profile.php" class="nav-link <?php echo $current_page === 'profile.php' ? 'active' : ''; ?>">
+              <i class="nav-icon fas fa-user-circle"></i>
+              <p>Profile</p>
+            </a>
           </li>
-
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

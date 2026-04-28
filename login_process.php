@@ -10,14 +10,16 @@ $message = '';
 if(isset($_POST["login"]))
 {
     $email= $_POST["email"];
-	$query = "SELECT * FROM users WHERE email= '$email'";
-	$statement = $conn->query($query) or die($conn->error);
+	$statement = $conn->prepare("SELECT id, username, email, password FROM users WHERE email = ? LIMIT 1");
+	$statement->bind_param("s", $email);
+	$statement->execute();
+	$result = $statement->get_result();
 	
 	
-	if(!empty($statement) && $statement->num_rows > 0)
+	if($result->num_rows > 0)
 	{
 		
-		while($row = $statement->fetch_assoc())
+		while($row = $result->fetch_assoc())
 		{
             $email= $row["email"];
             $password= $row["password"];
@@ -30,10 +32,12 @@ if(isset($_POST["login"]))
 					$_SESSION['id'] = $row['id'];
 					$_SESSION['username'] = $row['username'];
 					header("location:index.php");
+					exit();
 				}
 				else
 				{
 					header("location:login.php");
+					exit();
 					// $message = "<label>Wrong Password</label>";
 				}
 			
@@ -42,8 +46,11 @@ if(isset($_POST["login"]))
 	}
 	else
 	{
-		$message = "<label>Wrong Email Address</labe>";
+		header("location:login.php");
+		exit();
 	}
+
+	$statement->close();
 }
 
 ?>

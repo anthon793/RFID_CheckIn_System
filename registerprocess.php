@@ -38,21 +38,26 @@ else if ($_POST['password'] !== $_POST['cpassword'])
 }
 else {
       $username = $validated_data['username'];
-      $checkusername = "SELECT * FROM users WHERE username = '$username'";
-      $run_check = mysqli_query($conn , $checkusername) or die(mysqli_error($conn));
-      $count = mysqli_num_rows($run_check); 
+      $checkusername = $conn->prepare("SELECT id FROM users WHERE username = ? LIMIT 1");
+      $checkusername->bind_param("s", $username);
+      $checkusername->execute();
+      $run_check = $checkusername->get_result();
+      $count = $run_check->num_rows;
       if ($count > 0 ) {
 	  echo  "<center><font color='red'>username already taken! try a different one</font></center>";
 	  include ('register.php');
+	  $checkusername->close();
 	  exit();
 }
+      $checkusername->close();
       $firstname = $validated_data['firstname'];
       $lastname = $validated_data['lastname'];
       $email = $validated_data['email'];
       $pass = $validated_data['password'];
       $password = password_hash("$pass" , PASSWORD_DEFAULT);
-      $query = "INSERT INTO users(username,firstname,lastname,email,password) VALUES ('$username' , '$firstname' , '$lastname' , '$email', '$password')";
-      $result = mysqli_query($conn , $query) or die(mysqli_error($conn));
+      $statement = $conn->prepare("INSERT INTO users(username, firstname, lastname, email, password) VALUES (?, ?, ?, ?, ?)");
+      $statement->bind_param("sssss", $username, $firstname, $lastname, $email, $password);
+      $statement->execute();
       if (mysqli_affected_rows($conn) > 0) {
       	echo "<script>alert('SUCCESSFULLY REGISTERED');
 		  window.location.href='login.php';</script>";
@@ -61,6 +66,7 @@ else {
 	echo "<script>alert('An error occured, Try again!');
       	window.location.href='register.php';</script>";
 }
+      $statement->close();
 }
 }
 else {

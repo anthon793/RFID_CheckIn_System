@@ -63,7 +63,7 @@ Signal           |   Digital 6
 GND         	  |  GND
 VCC        	  |  5 V
 SDA        	  |  A4
-SDL         	  |  A5
+SCL         	  |  A5
 
 ## Buzzer
 -------------
@@ -81,9 +81,9 @@ Signal      |  Digital 5
 |LED                  |  Arduino  |
 |---------------------|-----------|
 Green LED GND         |  GND
-Green LED Signal      |  5V
-Red LED GND           |  Digital 5
-Red LED Signal        |  5V
+Green LED Signal      |  Digital 7
+Red LED GND           |  GND
+Red LED Signal        |  Digital 4
 
 
 # Project Setup
